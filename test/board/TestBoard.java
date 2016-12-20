@@ -286,6 +286,16 @@ public class TestBoard {
         assertShapeHasMoved(startCells, 3, 4);
         testee.tick();
         assertShapeHasMoved(startCells, 4, 4);
+        testee.undoMove();/**Elif*/
+        assertShapeHasMoved(startCells,3,4);
+        testee.undoMove();/**Elif*/
+        assertShapeHasMoved(startCells,2,4);
+        testee.undoMove();/**Elif*/
+        assertShapeHasMoved(startCells,1,4);
+        testee.tick();
+        assertShapeHasMoved(startCells,2,4);
+        testee.undoMove();/**Elif*/
+        assertShapeHasMoved(startCells,1,4);
     }
 
     private void assertShapeHasMoved(List<Cell> startCells, int rows, int columns) {
