@@ -20,6 +20,7 @@ public class GameRunner {
     private int Score;  			/** Secil */
     private JLabel scoreLabel;		/** Secil */
     private Sound sound; 		/** Fatma */
+    private boolean wait = true;  /** Secil */
     
     private GameRunner() throws InterruptedException {
         board = new BoardGui(30, 10);
@@ -53,22 +54,56 @@ public class GameRunner {
     
     /** Secil */
     public void stop(){
-        app.setVisible(false);
-        Object[] choices = {"Tekrar Oyna", "Çıkış"};
-        Object defaultChoice = choices[0];
-        int selected = JOptionPane.showOptionDialog(this.app, "", "GAME-OVER", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, new ImageIcon("gameover.png"), choices, defaultChoice);
+        app.dispose();
+    	ImageIcon image = new ImageIcon("gameover.png");
+    	JLabel label = new JLabel(image);
+    	JButton buton1 = new JButton("Tekrar Oyna");
+    	JButton buton2 = new JButton("Çıkış");
+    	buton1.setPreferredSize(new Dimension(350, 50));
+    	buton2.setPreferredSize(new Dimension(350, 50));
 
-        System.out.println(selected);
-
-        if(selected==0){
-            try {
-                new GameRunner();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        else
-            System.exit(0); 
+    	Font font=new Font("Calibri",Font.BOLD,16);
+     	buton1.setFont(font);
+     	buton2.setFont(font);
+     	
+     	JFrame frame = new JFrame("GAME-OVER");
+    	frame.setLayout(new BorderLayout());
+    	JPanel buttons = new JPanel();
+    	buttons.add(buton1);
+    	buttons.add(buton2);
+    	buttons.setBackground(Color.BLACK);
+    	
+    	frame.add(label,BorderLayout.NORTH);
+    	frame.add(buttons,BorderLayout.SOUTH);
+   
+    	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+     	frame.setVisible(true);
+     	
+     	buton2.addActionListener(new ActionListener() {	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
+     	
+     	buton1.addActionListener(new ActionListener() {	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				wait=false;
+			}
+		});
+     	
+    	try {
+    		while(wait)
+    			Thread.sleep(100);
+    		frame.dispose();
+    		new GameRunner();
+    		wait=true;
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
     }
     
     private void newApp() {
