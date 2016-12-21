@@ -24,13 +24,15 @@ public class Board {
     private static final int END_ROW = 3;
     public static final int START_COL = 3;
     private static final int END_COL = 6;
-    public static final Color DEFAULT_EMPTY_COLOUR = Color.gray;
+    public static Color DEFAULT_EMPTY_COLOUR = Color.gray; /** Fatma  */
     private boolean gameOver = false;
     private List<TickListener> tickListeners;
     private Shape nextShape;
     private RandomShapeGenerator randomShapeGenerator;
+    public Color prevColor=DEFAULT_EMPTY_COLOUR;    /** Fatma*/
     public int Score; /** Secil */
     public Sound sound;/** Fatma */
+    public int index;   /** Fatma */
 
   
     public Board(int rows, int columns) {
@@ -96,7 +98,27 @@ public class Board {
             listener.boardHasTicked();
         }
     }
-
+    public Color randomColorGenerator(){
+        /** Fatma */
+    	Color array[]={Color.black,Color.pink,Color.white,Color.gray,Color.lightGray};
+    	index = (int)((Math.random()*5)-1);
+    	if(array[index]==prevColor)
+    		randomColorGenerator();
+    	return array[index];
+    }
+    public void changeColor(){
+        /** Fatma */
+    	Color currentColor=randomColorGenerator();
+    	for (int row = 0; row < rows; row++) {
+    		for (Cell cell : cellsInRow(row)) {
+    			if(cell.getColour()==prevColor){
+    				cell.setColour(currentColor);
+    			}
+    		}
+    	}
+    	prevColor=currentColor;
+    	DEFAULT_EMPTY_COLOUR=currentColor;
+    }
     private void removeCompletedRows() {
         for (int row = 0; row < rows; row++) {
             boolean rowComplete = true;
@@ -105,6 +127,7 @@ public class Board {
             }
             if (rowComplete) {
                 removeRow(row);
+                changeColor();      /** Fatma */
             }
         }
     }
