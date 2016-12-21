@@ -45,6 +45,7 @@ public class GameRunner {
             scoreLabel.setText("Score : " +Score);   	/** Secil */        
             Thread.sleep(250);
         }
+	sound.play("game_over.wav"); /** Fatma */
         stop();
     }
     /**Fatma*/

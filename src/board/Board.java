@@ -66,7 +66,6 @@ public class Board {
         if (canAddNewShape()) mapper.setNewShape(shape);
         else
             gameOver = true;
-            sound.play("game_over.wav"); /** Fatma */
     }
       public void undoMove(){
     	  
