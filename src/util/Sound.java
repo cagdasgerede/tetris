@@ -8,12 +8,14 @@ import java.io.File;
 import board.Board;
 import java.io.File;
 import java.io.IOException;
+import runner.UserInterface;
 
 public class Sound {
 	public Clip clip = null;
 	public Board board;
     public void play(String sound)
     {
+    	if(UserInterface.getSound())
     	try {
             Clip clip = AudioSystem.getClip();
             clip.open(AudioSystem.getAudioInputStream(new File(sound)));
@@ -24,6 +26,7 @@ public class Sound {
         }
     }
     public void bGMusic() {
+    	if(UserInterface.getSound())
         try{
         	File soundFile =new File ("background.wav");
         	AudioInputStream ais =AudioSystem.getAudioInputStream(soundFile);
