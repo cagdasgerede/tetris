@@ -76,7 +76,7 @@ public class GameRunner {
     	ImageIcon image = new ImageIcon("gameover.png");
     	JLabel label = new JLabel(image);
     	JButton buton1 = new JButton("Tekrar Oyna");
-    	JButton buton2 = new JButton("Çıkış");
+    	JButton buton2 = new JButton("Cikis");
     	buton1.setPreferredSize(new Dimension(350, 50));
     	buton2.setPreferredSize(new Dimension(350, 50));
 
