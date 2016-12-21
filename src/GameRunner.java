@@ -49,11 +49,11 @@ public class GameRunner {
         scoreLabel= new JLabel("Score : " +Score);		/** Secil */
         app.add(scoreLabel,0); 						 	/** Secil */   
         sound=new Sound();      /** Fatma */
+	sound.bGMusic();   	/** Fatma */
         start();
     }
 
     void start() throws InterruptedException {
-        startBackgroundSound();         /** Fatma */
         board.addNewShapeAtRandom();
         board.repaintBoard();
         while (!board.gameOver()) {
@@ -62,14 +62,10 @@ public class GameRunner {
             scoreLabel.setText("Score : " +Score);   	/** Secil */        
             Thread.sleep(250);
         }
+	sound.clip.stop();  /** Fatma */
 	sound.play("game_over.wav"); /** Fatma */
         stop();
     }
-    /**Fatma*/
-    public void startBackgroundSound(){
-    	
-    }
-    
     /** Secil */
     public void stop(){
         app.dispose();
