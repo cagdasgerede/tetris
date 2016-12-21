@@ -1,26 +1,24 @@
-/**
-* @author Ertugrul
- */
-
-import java.awt.CardLayout;
+package runner;
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 // To create graphics , i will use swing tools
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
  
 /* This class creates a user interface. For example, there will be a "start game" button and with event
  * handling this button will start the game. Also there will be settings button to allow player choose 
@@ -29,25 +27,27 @@ import javax.swing.border.Border;
 public class UserInterface extends JFrame {
 	
 	private CustomPanel mainPanel;   // Main Menu 
+	private JPanel topPanel;   // Main Menu 
+	private static boolean wait = true ;
+	static JFrame game ;
+	private static JPanel otherPanel;
+	private static boolean sound = true;
 
-	
-	private UserInterface(){
+	public UserInterface(){
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setLayout(new CardLayout());
+		setLayout(null);
 		setBounds(0, 0, 1000, 500);
 		setLocationRelativeTo(null);   // to appear in center 
 		
 		// Initializing our custom panel with background image 
 		try {
 			mainPanel = new CustomPanel("src/new_images/bg.jpg",1000,500);
-
 		} catch (IOException e1) {
 			System.out.println("IO Exception");
 		}
-
-		
+	
 		setContentPane(mainPanel);
-		mainPanel.setLayout(new GridBagLayout());
+		mainPanel.setLayout(new BorderLayout());
 		setResizable(false);     // no need to be full size for Tetris game menu
 		
 		/* Buttons and their functions */
@@ -110,16 +110,45 @@ public class UserInterface extends JFrame {
 		gbc.anchor=GridBagConstraints.NORTHWEST;
 		gbc.weightx=1;
 		gbc.weighty=1;
-		add(button1,gbc);
+			
+		topPanel= new JPanel();
+		topPanel.setLayout(new GridBagLayout());
+		topPanel.setOpaque(false);
+		topPanel.setPreferredSize(new Dimension(1000, 250));
+		
+		topPanel.add(button1,gbc);
 		gbc.gridx = 1;
-		add(button2,gbc);
+		topPanel.add(button2,gbc);
 		gbc.gridx = 2;
-		add(button3,gbc);
+		topPanel.add(button3,gbc);
 		gbc.gridx = 3;
-		add(button4,gbc);
+		topPanel.add(button4,gbc);
 		gbc.gridx = 4;
-		add(button5,gbc);
-
+		topPanel.add(button5,gbc);		
+		
+		add(topPanel,BorderLayout.NORTH);
+		
+		otherPanel = new JPanel();
+		JPanel emptyPanel = new JPanel();
+		otherPanel.setLayout(new GridBagLayout());
+		otherPanel.setPreferredSize(new Dimension(500, 250));
+		
+		emptyPanel.setPreferredSize(new Dimension(500, 250));
+		
+		otherPanel.setOpaque(false);
+		emptyPanel.setOpaque(false);
+		add(otherPanel,BorderLayout.WEST);
+		add(emptyPanel,BorderLayout.EAST);
+			
+		
+		button1.addActionListener(new ActionListener() {	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				game.dispose();
+				wait=false;
+			}
+		});
+		
 		// Add functionality to exit button. It's trivial.
 		button5.addActionListener(new ActionListener() {
 			
@@ -128,13 +157,79 @@ public class UserInterface extends JFrame {
 				System.exit(0);
 			}
 		});
+				
+		button3.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
 	
+				GridBagConstraints gbc2 = new GridBagConstraints();
+				JLabel arrowLabel = new JLabel("To move and turn the"+ "\n"+ "blocks use arrow keys!");
+				JLabel undoLabel = new JLabel("You can undo your move with key U!");
+				JLabel spaceLabel = new JLabel("Don't wanna wait? Use space button!");
+				
+				otherPanel.removeAll();
+				otherPanel.repaint();
+				
+				gbc2.weighty=1;				
+				
+				gbc2.gridx=0; gbc2.gridy=0;
+				otherPanel.add(arrowLabel,gbc2);
+				
+				gbc2.gridx=0; gbc2.gridy=1;
+				otherPanel.add(undoLabel,gbc2);
+				
+				gbc2.gridx=0; gbc2.gridy=2;
+				otherPanel.add(spaceLabel,gbc2);
+
+				otherPanel.revalidate();
+						
+			}
+		});
+		
+		JCheckBox mute = new JCheckBox("Mute");
+			button2.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					JPanel settingPanel = new JPanel();
+					mute.setContentAreaFilled(false);
+					mute.setOpaque(false);
+					mute.setBorderPainted(false);
+					 				 
+					 settingPanel.add(mute);
+					 otherPanel.removeAll();
+					otherPanel.repaint();
+					 otherPanel.add(settingPanel);
+					 otherPanel.revalidate();
+
+				}
+			});
+			mute.addChangeListener(new ChangeListener() {
+				
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					 sound = !mute.isSelected();				
+				}
+			});   
 	}
 	
+	public static boolean getSound(){
+		return sound;
+	}
 	public static void main(String[] args) {
-			JFrame game = new UserInterface ();
+			game = new UserInterface ();
 			game.setVisible(true);
+			
+			try {
+				while(wait)
+					Thread.sleep(1000);
+				new GameRunner();
+				wait=true;
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 	}
+	
 
 }
-

@@ -1,3 +1,4 @@
+package runner;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -39,7 +40,7 @@ public class GameRunner {
     private Sound sound; 		/** Fatma */
     private boolean wait = true;  /** Secil */
     
-    private GameRunner() throws InterruptedException {
+    GameRunner() throws InterruptedException {
         board = new BoardGui(30, 10);
         app = new JFrame();
         newApp();
